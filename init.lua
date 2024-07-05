@@ -1,12 +1,12 @@
 fungal_file = "data/scripts/magic/fungal_shift.lua"
 
-local function ReplaceFunction(file, search, replace)
+local function ReplaceFunction(file, search, replace) --utility function
 	local content = ModTextFileGetContent(file)
 	local new = content:gsub(search, replace)
 	ModTextFileSetContent(file, new)
 end
 
-local function ReplaceFlaskUsage()
+local function ReplaceFlaskUsage() --100% change
 	if ModSettingGet("lamas_fungal_shifts.guaranteed_fungal_shift") then
 		local search_string = "if held_material > 0 and random_nexti%( rnd, 1, 100 %) <= 75 then"
 		local replace_string = "if held_material > 0 then"
@@ -14,7 +14,7 @@ local function ReplaceFlaskUsage()
 	end
 end
 
-local function ReplaceCooldown()
+local function ReplaceCooldown() --seconds from settings * 60 frames
 	local cooldown = ModSettingGet("lamas_fungal_shifts.fungal_shift_cooldown")
 	if cooldown < 300 then
 		local search_string = "if frame < last_frame %+ 60%*60%*5 and not debug_no_limits then"
@@ -23,7 +23,7 @@ local function ReplaceCooldown()
 	end
 end
 
-local function ReplaceMaxShift()
+local function ReplaceMaxShift() --replacing limit
 	local max_shift = ModSettingGet("lamas_fungal_shifts.fungal_shift_max")
 	if max_shift > 20 then
 		local search_string = "(if iter >= )(20)( and not debug_no_limits then)"
@@ -32,7 +32,7 @@ local function ReplaceMaxShift()
 	end
 end
 
-local function ReplaceTrip()
+local function ReplaceTrip() --make trip to happen immediately 
 	if ModSettingGet("lamas_fungal_shifts.trip_shorten") then
 		local tripfile = "data/scripts/status_effects/status_list.lua"
 		local search_string = "(effect_entity=\"data/entities/misc/effect_trip_03%.xml.-min_threshold_normalized=)3%.0"
@@ -47,6 +47,4 @@ function OnModPreInit()
 	ReplaceMaxShift()
 	ReplaceTrip()
 	dofile_once("mods/lamas_fungal_shifts/files/extra_materials.lua")
-	local content = ModTextFileGetContent(fungal_file)
-	print(content)
 end
